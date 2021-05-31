@@ -1,7 +1,5 @@
 package com.example.esiea_3a_cyril_devalet.presentation.list
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,8 +25,8 @@ class PokemonListFragment : Fragment() {
     //private val val sharedPref = activity?.getSharedPreferences("app", Context.MODE_PRIVATE)
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_pokemon_list, container, false)
@@ -45,34 +43,18 @@ class PokemonListFragment : Fragment() {
         }
 
 
-        /*val list = getListFromCache()
-        if(list.isEmpty()){
-            callAPI()
-        }else{
-            showList(list)
-        }*/
-    }
-
-    /*private fun getListFromCache(): List<Pokemon> {
-        sharedPref.
-        //TODO
-    }
-
-    private fun saveListIntoCache() {
-        TODO("Not yet implemented")
-    }*/
-
-    private fun callAPI() {
         Singletons.pokeAPI.getPokemonList().enqueue(object : Callback<PokemonListResponse> {
             override fun onFailure(call: Call<PokemonListResponse>, t: Throwable) {
                 //TODO("Not yet implemented")
             }
 
-            override fun onResponse(call: Call<PokemonListResponse>, response: Response<PokemonListResponse>) {
+            override fun onResponse(
+                call: Call<PokemonListResponse>,
+                response: Response<PokemonListResponse>
+            ) {
                 if (response.isSuccessful && response.body() != null) {
                     val pokemonResponse = response.body()!!
-                    //saveListIntoCache()
-                    showList(pokemonResponse.results)
+                    adapter.updateList(pokemonResponse.results)
                 }
             }
         })
