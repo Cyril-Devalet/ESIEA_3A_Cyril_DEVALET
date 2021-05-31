@@ -61,7 +61,6 @@ class PokemonListFragment : Fragment() {
         })
     }
 
-
     private fun showList(pokeList: List<Pokemon>) {
         adapter.updateList(pokeList)
     }
