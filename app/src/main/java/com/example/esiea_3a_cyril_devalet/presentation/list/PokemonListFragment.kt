@@ -1,5 +1,7 @@
 package com.example.esiea_3a_cyril_devalet.presentation.list
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.esiea_3a_cyril_devalet.R
 import com.example.esiea_3a_cyril_devalet.presentation.Singletons
-import com.example.esiea_3a_cyril_devalet.presentation.api.PokeAPI
 import com.example.esiea_3a_cyril_devalet.presentation.api.PokemonListResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class PokemonListFragment : Fragment() {
 
@@ -25,7 +24,7 @@ class PokemonListFragment : Fragment() {
 
     private val adapter = PokemonAdapter(listOf(), ::onClickedPokemon)
 
-
+    //private val val sharedPref = activity?.getSharedPreferences("app", Context.MODE_PRIVATE)
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -46,21 +45,42 @@ class PokemonListFragment : Fragment() {
         }
 
 
+        /*val list = getListFromCache()
+        if(list.isEmpty()){
+            callAPI()
+        }else{
+            showList(list)
+        }*/
+    }
 
-        Singletons.pokeAPI.getPokemonList().enqueue(object: Callback<PokemonListResponse>{
+    /*private fun getListFromCache(): List<Pokemon> {
+        sharedPref.
+        //TODO
+    }
+
+    private fun saveListIntoCache() {
+        TODO("Not yet implemented")
+    }*/
+
+    private fun callAPI() {
+        Singletons.pokeAPI.getPokemonList().enqueue(object : Callback<PokemonListResponse> {
             override fun onFailure(call: Call<PokemonListResponse>, t: Throwable) {
                 //TODO("Not yet implemented")
             }
 
             override fun onResponse(call: Call<PokemonListResponse>, response: Response<PokemonListResponse>) {
-                if(response.isSuccessful && response.body() != null){
+                if (response.isSuccessful && response.body() != null) {
                     val pokemonResponse = response.body()!!
-                    adapter.updateList(pokemonResponse.results)
+                    //saveListIntoCache()
+                    showList(pokemonResponse.results)
                 }
             }
         })
+    }
 
 
+    private fun showList(pokeList: List<Pokemon>) {
+        adapter.updateList(pokeList)
     }
 
     private fun onClickedPokemon(id: Int) {
